@@ -10,7 +10,6 @@
 #include "buffer.h"
 #include <unistd.h>
 #include <pthread.h>
-#include <thread>
 #include <semaphore>
 #include <mutex>
 
