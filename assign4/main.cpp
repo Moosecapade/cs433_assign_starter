@@ -5,12 +5,14 @@
  * @brief The main program for the producer consumer problem.
  * @version 0.1
  */
-//You must complete the all parts marked as "TODO". Delete "TODO" after you are done.
-// Remember to add sufficient and clear comments to your code
+
 #include <iostream>
 #include "buffer.h"
 #include <unistd.h>
 #include <pthread.h>
+#include <thread>
+#include <semaphore>
+#include <mutex>
 
 using namespace std;
 
@@ -56,14 +58,31 @@ void *consumer(void *param) {
 }
 
 int main(int argc, char *argv[]) {
-    /* TODO: 1. Get command line arguments argv[1],argv[2],argv[3] */
+    /* 1. Get command line arguments argv[1],argv[2],argv[3] */
+    int main_sleep = stoi(argv[1]),
+        num_prod = stoi(argv[2]),
+        num_con = stoi(argv[3]);
+
     /* TODO: 2. Initialize buffer and synchronization primitives */
-    /* TODO: 3. Create producer thread(s).
-     * You should pass an unique int ID to each producer thread, starting from 1 to number of threads */
+    
+    counting_semaphore<5> empty(5);
+    counting_semaphore<5> full(0);
+    mutex buff_mtx;
+
+
+    /* TODO: 3. Create producer thread(s). */
+
+    for(int i = 1; i <= num_prod; i++){
+        
+    }
+
+    /* You should pass an unique int ID to each producer thread, starting from 1 to number of threads */
     /* TODO: 4. Create consumer thread(s) */
     /* TODO: 5. Main thread sleep */
     /* TODO: 6. Exit */
 
+
+/*buffer test
     for(int i = 0; i <= buffer.get_size(); i++){
         buffer_item item = i; 
         cout << "try insert " << i << endl;
@@ -75,4 +94,5 @@ int main(int argc, char *argv[]) {
         cout << "item removed was " << *item << endl;
         buffer.print_buffer();
     }
+*/
 }
