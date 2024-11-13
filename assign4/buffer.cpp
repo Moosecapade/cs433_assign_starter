@@ -1,16 +1,29 @@
 /**
 * Assignment 4: Producer Consumer Problem
- * @file buffer.cpp
- * @author ??? (TODO: your name)
- * @brief Implementation file for the buffer class
+ * @file buffer.h
+ * @author Erin Bailey and Zach Miller
+ * @brief header file for the buffer class
  * @version 0.1
  */
 
-// You must complete the all parts marked as "TODO". Delete "TODO" after you are done.
-// Remember to add sufficient and clear comments to your code
-#include "buffer.h"
+#ifndef ASSIGN4_BUFFER_H
+#define ASSIGN4_BUFFER_H
+
+// Define the data type of the buffer items
+typedef int buffer_item;
 
 /**
+ * @brief The bounded buffer class. The number of items in the buffer cannot exceed the size of the buffer.
+ */
+class Buffer {
+private:
+    int size,
+        front,
+        back;
+    int *buffer;
+
+public:
+    /**
      * @brief Construct a new Buffer object
      * @param size the size of the buffer
      */
@@ -64,4 +77,13 @@
      * @brief Print the buffer
      */
     void print_buffer();
-// TODO: Add your implementation of the buffer class here
+
+    //c++ % doesn't return positive values for negatives mod n, this fixes that
+    int mod(int a, int n){
+        while(a < 0){
+            a += n;
+        }
+        return a % n;
+    }
+};
+#endif //ASSIGN4_BUFFER_H
