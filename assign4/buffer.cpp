@@ -16,7 +16,7 @@
      * @brief Construct a new Buffer object
      * @param size the size of the buffer
      */
-    Buffer::Buffer(int size = 5){
+    Buffer::Buffer(int size){
         this->size  = size;
         front = 0; // front is where items are to be inserted in the buffer
         back = 0;  // back is where items are to be removed from
@@ -53,6 +53,7 @@
     bool Buffer::remove_item(buffer_item *item){
         if(front != back){
             *item = buffer[back];
+            buffer[back] = -1;
             back = (back + 1) % size;
             return true;
         }else return false;
