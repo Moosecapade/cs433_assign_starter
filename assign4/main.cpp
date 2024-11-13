@@ -1,7 +1,7 @@
 /**
 * Assignment 4: Producer Consumer Problem
  * @file main.cpp
- * @author ??? (TODO: your name)
+ * @author Erin Bailey and Zach Miller
  * @brief The main program for the producer consumer problem.
  * @version 0.1
  */
@@ -63,4 +63,16 @@ int main(int argc, char *argv[]) {
     /* TODO: 4. Create consumer thread(s) */
     /* TODO: 5. Main thread sleep */
     /* TODO: 6. Exit */
+
+    for(int i = 0; i <= buffer.get_size(); i++){
+        buffer_item item = i; 
+        cout << "try insert " << i << endl;
+        if(buffer.insert_item(item)) buffer.print_buffer();
+    }
+    for(int i = buffer.get_size() - 1; i >= 0; i--){
+        buffer_item *item;
+        buffer.remove_item(item);
+        cout << "item removed was " << *item << endl;
+        buffer.print_buffer();
+    }
 }
