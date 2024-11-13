@@ -17,7 +17,10 @@ typedef int buffer_item;
  */
 class Buffer {
 private:
-    // TODO: Add your implementation of the buffer class here
+    int *buffer,
+        size,
+        front,
+        back;
 
 public:
     /**
