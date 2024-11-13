@@ -17,10 +17,10 @@ typedef int buffer_item;
  */
 class Buffer {
 private:
-    int *buffer,
-        size,
+    int size,
         front,
         back;
+    int *buffer;
 
 public:
     /**
@@ -77,5 +77,13 @@ public:
      * @brief Print the buffer
      */
     void print_buffer();
+
+    //c++ % doesn't return positive values for negatives mod n, this fixes that
+    int mod(int a, int n){
+        while(a < 0){
+            a += n;
+        }
+        return a % n;
+    }
 };
 #endif //ASSIGN4_BUFFER_H
