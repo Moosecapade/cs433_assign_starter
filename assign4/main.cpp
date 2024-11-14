@@ -93,7 +93,7 @@ int main(int argc, char *argv[]) {
     }
     for(vector<pthread_t>::iterator it = consumer_threads.begin(); it != producer_threads.end(); it++){
         int i = 0;
-        int r = pthread_create(&*it, NULL, producer, &argcon[i]); 
+        int r = pthread_create(&*it, NULL, consumer, &argcon[i]); 
         i++;
     }
 
