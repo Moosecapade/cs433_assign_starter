@@ -10,8 +10,10 @@
 #include "buffer.h"
 #include <unistd.h>
 #include <pthread.h>
+#include <thread>
 #include <semaphore>
 #include <mutex>
+#include <vector>
 
 using namespace std;
 
@@ -62,36 +64,39 @@ int main(int argc, char *argv[]) {
         num_prod = stoi(argv[2]),
         num_con = stoi(argv[3]);
 
-    /* TODO: 2. Initialize buffer and synchronization primitives */
+    /* 2. Initialize buffer and synchronization primitives */
     
     counting_semaphore<5> empty(5);
     counting_semaphore<5> full(0);
     mutex buff_mtx;
 
 
-    /* TODO: 3. Create producer thread(s). */
-
-    for(int i = 1; i <= num_prod; i++){
-        
+    /* 3. Create producer thread(s). */
+    vector<pthread_t> producer_threads(num_prod);
+    int argprod[num_prod];
+    for(int i = 0; i < num_prod; i++){
+        argprod[i] = i + 1;
+    }
+    for(vector<pthread_t>::iterator it = producer_threads.begin(); it != producer_threads.end(); it++){
+        int i = 0;
+        int r = pthread_create(&*it, NULL, producer, &argprod[i]); 
+        i++;
     }
 
     /* You should pass an unique int ID to each producer thread, starting from 1 to number of threads */
-    /* TODO: 4. Create consumer thread(s) */
+    /* 4. Create consumer thread(s) */
+
+    vector<pthread_t> consumer_threads(num_prod);
+    int argcon[num_prod];
+    for(int i = 0; i < num_prod; i++){
+        argcon[i] = i + 1;
+    }
+    for(vector<pthread_t>::iterator it = consumer_threads.begin(); it != producer_threads.end(); it++){
+        int i = 0;
+        int r = pthread_create(&*it, NULL, producer, &argcon[i]); 
+        i++;
+    }
+
     /* TODO: 5. Main thread sleep */
     /* TODO: 6. Exit */
-
-
-/*buffer test
-    for(int i = 0; i <= buffer.get_size(); i++){
-        buffer_item item = i; 
-        cout << "try insert " << i << endl;
-        if(buffer.insert_item(item)) buffer.print_buffer();
-    }
-    for(int i = buffer.get_size() - 1; i >= 0; i--){
-        buffer_item *item;
-        buffer.remove_item(item);
-        cout << "item removed was " << *item << endl;
-        buffer.print_buffer();
-    }
-*/
 }
