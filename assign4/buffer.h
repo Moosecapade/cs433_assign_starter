@@ -19,7 +19,8 @@ class Buffer {
 private:
     int size,
         front,
-        back;
+        back,
+        count;
     int *buffer;
 
 public:
@@ -54,7 +55,7 @@ public:
      * @brief Get the size of the buffer
      * @return the size of the buffer
      */
-    int get_size();
+    const int get_size();
 
     /**
      * @brief Get the number of items in the buffer
