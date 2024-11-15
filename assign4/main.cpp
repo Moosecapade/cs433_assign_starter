@@ -33,11 +33,11 @@ void *producer(void *param) {
 
         {
             lock_guard<mutex> lock(buffer_mutex); // Lock critical section
-            if (buffer.insert_item(item)) {
-                cout << "Producer " << id << ": Inserted item " << item << endl;
+            if (buffer.insert_item(item)) {  // if an item can be inserted in the buffer, print the inserted item and print the buffer
+                cout << "Producer " << id << ": Inserted item " << item << endl;    
                 buffer.print_buffer();
             } else {
-                cout << "Producer " << id << ": Buffer is full (error condition)" << endl;
+                cout << "Producer " << id << ": Buffer is full (error condition)" << endl;  // buffer is full
             }
         }
 
@@ -57,11 +57,11 @@ void *consumer(void *param) {
 
         {
             lock_guard<mutex> lock(buffer_mutex); // Lock critical section
-            if (buffer.remove_item(&item)) {
+            if (buffer.remove_item(&item)) {  // if an item can be removed from the buffer, print the consumed item and print the buffer
                 cout << "Consumer " << id << ": Removed item " << item << endl;
                 buffer.print_buffer();
             } else {
-                cout << "Consumer " << id << ": Buffer is empty (error condition)" << endl;
+                cout << "Consumer " << id << ": Buffer is empty (error condition)" << endl;  // buffer is empty 
             }
         }
 
@@ -70,6 +70,7 @@ void *consumer(void *param) {
 }
 
 int main(int argc, char *argv[]) {
+    // error handling to ensure the program is executed correctly, prints out syntax if there is user error
     if (argc != 4) {
         cerr << "Usage: " << argv[0] << " 'sleep duration', 'number of producers', 'number of consumers'" << endl;
         exit(1);
@@ -84,9 +85,11 @@ int main(int argc, char *argv[]) {
     sem_init(&empty, 0, 5); // Buffer has 5 empty slots initially
     sem_init(&full, 0, 0);  // Buffer starts with 0 full slots
 
+    // vectors to hold producer and consumer threads
     vector<pthread_t> producer_threads(num_producers);
     vector<pthread_t> consumer_threads(num_consumers);
 
+    // vectors to hold producer and consumer id's
     vector<int> producer_ids(num_producers);
     vector<int> consumer_ids(num_consumers);
 
