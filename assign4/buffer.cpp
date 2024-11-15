@@ -117,9 +117,11 @@
      */
     void Buffer::print_buffer(){
         std::cout << "Buffer: [";
-        for(int i = 0; i < size; i++){
-            std::cout << buffer[i];
-            if(i != size - 1) std::cout << ", ";
+        for(int i = back; i < back + count; i++){
+            std::cout << buffer[i % size];
+            if(i != back + count - 1){
+                std::cout << ", ";
+            }
         }
         std::cout << "]" << std::endl;
     }
