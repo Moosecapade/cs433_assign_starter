@@ -32,7 +32,7 @@ public:
 
     /**
      * @brief Construct a new Buffer object from a given one(bc autograder thinks its necessary ig)
-     * @param size the size of the buffer
+     * @param other (a different buffer)
      */
     Buffer(Buffer other);
 
