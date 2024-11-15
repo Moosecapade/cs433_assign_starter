@@ -92,5 +92,8 @@ public:
         }
         return a % n;
     }
+
+    Buffer& operator=(const Buffer& other);
+
 };
 #endif //ASSIGN4_BUFFER_H
