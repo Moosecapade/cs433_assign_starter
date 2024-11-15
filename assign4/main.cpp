@@ -97,6 +97,8 @@ int main(int argc, char *argv[]) {
         i++;
     }
 
-    /* TODO: 5. Main thread sleep */
+    /* 5. Main thread sleep */
+    sleep(10);
     /* TODO: 6. Exit */
+    exit(0);
 }
