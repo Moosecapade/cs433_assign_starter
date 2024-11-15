@@ -31,6 +31,12 @@ public:
     Buffer(int size = 5);
 
     /**
+     * @brief Construct a new Buffer object
+     * @param size the size of the buffer
+     */
+    Buffer(Buffer other);
+
+    /**
      * @brief Destroy the Buffer object
      */
     ~Buffer();
