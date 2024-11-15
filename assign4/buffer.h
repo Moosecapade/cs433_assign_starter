@@ -31,6 +31,12 @@ public:
     Buffer(int size = 5);
 
     /**
+     * @brief Construct a new Buffer object from a given one(bc autograder thinks its necessary ig)
+     * @param other (a different buffer)
+     */
+    Buffer(const Buffer& other);
+
+    /**
      * @brief Destroy the Buffer object
      */
     ~Buffer();
