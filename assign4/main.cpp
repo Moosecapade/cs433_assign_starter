@@ -61,7 +61,7 @@ void *consumer(void *param) {
 int main(int argc, char *argv[]) {
     if (argc != 4) {
         cerr << "Usage: " << argv[0] << " 'sleep duration', 'number of producers', 'number of consumers'" << endl;
-        return 1;
+        exit(1);
     }
     /* 1. Get command line arguments argv[1],argv[2],argv[3] */
     int main_sleep = stoi(argv[1]),
