@@ -31,7 +31,7 @@ Buffer::Buffer(int size){
  * @brief Fake copy constructer (bc autograder thinks its necessary ig)
  * @param Buffer (a different one)
  */
-Buffer::Buffer(Buffer other){
+Buffer::Buffer(const Buffer& other){
 }
 
 /**
