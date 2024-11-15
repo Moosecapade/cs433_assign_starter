@@ -43,7 +43,7 @@ Buffer::Buffer(const Buffer& other){
  * @brief Destroy the Buffer object
  */
 Buffer::~Buffer(){
-    delete buffer;
+    delete[] buffer;
 }
 
 /**
@@ -136,4 +136,19 @@ void Buffer::print_buffer(){
         }
     }
     std::cout << "]" << std::endl;
+}
+
+Buffer& Buffer::operator=(const Buffer& other) {
+    if (this != &other) { // Avoid self-assignment
+        delete[] buffer; // Free existing memory
+        size = other.size;
+        front = other.front;
+        back = other.back;
+        count = other.count;
+        buffer = new int[size]; // Allocate new memory
+        for (int i = 0; i < size; i++) {
+            buffer[i] = other.buffer[i]; // Copy contents
+        }
+    }
+    return *this;
 }
