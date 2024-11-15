@@ -1,60 +1,71 @@
 /**
 * Assignment 4: Producer Consumer Problem
  * @file main.cpp
- * @author Erin Bailey and Zach Miller
- * @brief The main program for the producer consumer problem.
+ * @brief The main program for the producer consumer problem using POSIX semaphores.
  * @version 0.1
  */
 
 #include <iostream>
-#include "buffer.h"
 #include <unistd.h>
 #include <pthread.h>
-#include <thread>
-#include <semaphore>
+#include <semaphore.h>
 #include <mutex>
 #include <vector>
+#include "buffer.h"
 
 using namespace std;
 
-// global buffer object
-Buffer buffer;
+// Global objects
+Buffer buffer(5); // Initialize buffer with size 5
+sem_t empty;      // Semaphore to track empty slots in the buffer
+sem_t full;       // Semaphore to track full slots in the buffer
+mutex buffer_mutex; // Mutex for critical sections in the buffer
 
 // Producer thread function
-// TODO: Add your implementation of the producer thread here
 void *producer(void *param) {
-    // Each producer insert its own ID into the buffer
-    // For example, thread 1 will insert 1, thread 2 will insert 2, and so on.
-    buffer_item item = *((int *) param);
+    int id = *((int *) param); // Each producer gets a unique ID
+    buffer_item item = id;
 
     while (true) {
-        /* sleep for a random period of time */
-        usleep(rand()%1000000);
-        // TODO: Add synchronization code here
-        if (buffer.insert_item(item)) {
-            cout << "Producer " << item << ": Inserted item " << item << endl;
-            buffer.print_buffer();
-        } else {
-            cout << "Producer error condition"  << endl;    // shouldn't come here
+        usleep(rand() % 1000000); // Simulate random production delay
+
+        sem_wait(&empty); // Wait for an empty slot
+
+        {
+            lock_guard<mutex> lock(buffer_mutex); // Lock critical section
+            if (buffer.insert_item(item)) {
+                cout << "Producer " << id << ": Inserted item " << item << endl;
+                buffer.print_buffer();
+            } else {
+                cout << "Producer " << id << ": Buffer is full (error condition)" << endl;
+            }
         }
+
+        sem_post(&full); // Signal that an item was added
     }
 }
 
 // Consumer thread function
-// TODO: Add your implementation of the consumer thread here
 void *consumer(void *param) {
+    int id = *((int *) param); // Each consumer gets a unique ID
     buffer_item item;
 
     while (true) {
-        /* sleep for a random period of time */
-        usleep(rand() % 1000000);
-        // TODO: Add synchronization code here
-        if (buffer.remove_item(&item)) {
-            cout << "Consumer " << item << ": Removed item " << item << endl;
-            buffer.print_buffer();
-        } else {
-            cout << "Consumer error condition" << endl;    // shouldn't come here
+        usleep(rand() % 1000000); // Simulate random consumption delay
+
+        sem_wait(&full); // Wait for a full slot
+
+        {
+            lock_guard<mutex> lock(buffer_mutex); // Lock critical section
+            if (buffer.remove_item(&item)) {
+                cout << "Consumer " << id << ": Removed item " << item << endl;
+                buffer.print_buffer();
+            } else {
+                cout << "Consumer " << id << ": Buffer is empty (error condition)" << endl;
+            }
         }
+
+        sem_post(&empty); // Signal that an item was removed
     }
 }
 
@@ -63,46 +74,40 @@ int main(int argc, char *argv[]) {
         cerr << "Usage: " << argv[0] << " 'sleep duration', 'number of producers', 'number of consumers'" << endl;
         exit(1);
     }
-    /* 1. Get command line arguments argv[1],argv[2],argv[3] */
-    int main_sleep = stoi(argv[1]),
-        num_prod = stoi(argv[2]),
-        num_con = stoi(argv[3]);
 
-    /* 2. Initialize buffer and synchronization primitives */
-    
-    counting_semaphore<5> empty(5);
-    counting_semaphore<5> full(0);
-    mutex buff_mtx;
+    // Parse command-line arguments
+    int main_sleep = stoi(argv[1]);
+    int num_producers = stoi(argv[2]);
+    int num_consumers = stoi(argv[3]);
 
+    // Initialize semaphores
+    sem_init(&empty, 0, 5); // Buffer has 5 empty slots initially
+    sem_init(&full, 0, 0);  // Buffer starts with 0 full slots
 
-    /* 3. Create producer thread(s). */
-    vector<pthread_t> producer_threads(num_prod);
-    int argprod[num_prod];
-    for(int i = 0; i < num_prod; i++){
-        argprod[i] = i + 1;
-    }
-    for(vector<pthread_t>::iterator it = producer_threads.begin(); it != producer_threads.end(); it++){
-        int i = 0;
-        int r = pthread_create(&*it, NULL, producer, &argprod[i]); 
-        i++;
+    vector<pthread_t> producer_threads(num_producers);
+    vector<pthread_t> consumer_threads(num_consumers);
+
+    vector<int> producer_ids(num_producers);
+    vector<int> consumer_ids(num_consumers);
+
+    // Create producer threads
+    for (int i = 0; i < num_producers; ++i) {
+        producer_ids[i] = i + 1;
+        pthread_create(&producer_threads[i], nullptr, producer, &producer_ids[i]);
     }
 
-    /* You should pass an unique int ID to each producer thread, starting from 1 to number of threads */
-    /* 4. Create consumer thread(s) */
-
-    vector<pthread_t> consumer_threads(num_prod);
-    int argcon[num_prod];
-    for(int i = 0; i < num_prod; i++){
-        argcon[i] = i + 1;
-    }
-    for(vector<pthread_t>::iterator it = consumer_threads.begin(); it != producer_threads.end(); it++){
-        int i = 0;
-        int r = pthread_create(&*it, NULL, consumer, &argcon[i]); 
-        i++;
+    // Create consumer threads
+    for (int i = 0; i < num_consumers; ++i) {
+        consumer_ids[i] = i + 1;
+        pthread_create(&consumer_threads[i], nullptr, consumer, &consumer_ids[i]);
     }
 
-    /* 5. Main thread sleep */
-    sleep(10);
-    /* TODO: 6. Exit */
-    exit(0);
+    // Main thread sleeps for the specified time
+    sleep(main_sleep);
+
+    // Cleanup: Destroy semaphores
+    sem_destroy(&empty);
+    sem_destroy(&full);
+
+    return 0;
 }
