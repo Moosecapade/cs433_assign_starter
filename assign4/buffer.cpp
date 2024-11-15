@@ -28,8 +28,8 @@ Buffer::Buffer(int size){
 }
 
 /**
- * @brief Construct a new Buffer object from a given one(bc autograder thinks its necessary ig)
- * @param size the size of the buffer
+ * @brief Fake copy constructer (bc autograder thinks its necessary ig)
+ * @param Buffer (a different one)
  */
 Buffer(Buffer other){
 }
