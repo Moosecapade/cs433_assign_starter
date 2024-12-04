@@ -27,8 +27,16 @@ public:
 	int frame_num;
 	// valid bit represents whether a page is in the physical memory
 	bool valid = false;
-    // dirty bit represents whether a page is changed
-    bool dirty = false;
+    	// dirty bit represents whether a page is changed
+    	bool dirty = false;
+
+	PageEntry(int frame = 0){
+		frame_num = frame;
+		if(frame != 0){
+			valid = true;
+		}
+	}
+	~PageEntry(){}
 };
 
 
