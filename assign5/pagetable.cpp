@@ -12,7 +12,7 @@
 // Constrcutor
 PageTable::PageTable(int num_pages) {
     for(int i = 0; i < num_pages; i++){
-        pages.emplace_back(new PageEntry);
+        pages.emplace_back(PageEntry());
     }
 }
 
