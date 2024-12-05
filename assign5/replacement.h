@@ -25,7 +25,10 @@ protected:      // subclasses can access these members
 		num_pages = 0,
 		num_frames = 0,
 		used_frames = 0,
-		used_pages = 0;
+		used_pages = 0,
+        num_refs = 0;
+
+    unsigned int counter = 0; // keeps track of how many steps we've gone thru
 	
 public:
 	/**
@@ -47,7 +50,7 @@ public:
      *          If the page is not valid but free frames are available, it calls the load_page function.
      *          If the page is not valid and there is no free frame, it calls the replace_page function.
      * @param page_num The logical page number.
-	 * @param is_write whether this access a memory write
+	 * @param is_write whether this access a memory write(always read)
 	 * @return whether it's a page fault: true if it's a page fault
 	 */
     virtual bool access_page(int page_num, bool is_write = false);
